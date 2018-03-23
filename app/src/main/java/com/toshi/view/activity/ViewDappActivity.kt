@@ -30,6 +30,7 @@ import com.toshi.extensions.getAbsoluteY
 import com.toshi.extensions.openWebView
 import com.toshi.extensions.startActivity
 import com.toshi.extensions.toast
+import com.toshi.model.network.dapp.Dapp
 import com.toshi.model.network.dapp.DappResult
 import com.toshi.util.ImageUtil
 import com.toshi.viewModel.ViewDappViewModel
@@ -135,7 +136,9 @@ class ViewDappActivity : AppCompatActivity() {
 
     private fun initObservers() {
         viewModel.dapp.observe(this, Observer {
-            if (it != null) renderDappInfo(it)
+            if (it == null) return@Observer
+            renderDappInfo(it)
+            setToolbar(it.dapp)
         })
         viewModel.error.observe(this, Observer {
             if (it != null) toast(it)
@@ -151,5 +154,15 @@ class ViewDappActivity : AppCompatActivity() {
         categories.addCategories(dappResult.categories)
         ImageUtil.loadImageOrPlaceholder(header.headerImage, dapp?.cover)
         ImageUtil.loadImageOrPlaceholder(dappAvatar, dapp?.icon)
+    }
+
+    private fun setToolbar(dapp: Dapp?) {
+        if (dapp?.cover != null) {
+            header.enableCollapsing()
+            scrollView.isNestedScrollingEnabled = true
+        } else {
+            header.disableCollapsing()
+            scrollView.isNestedScrollingEnabled = false
+        }
     }
 }

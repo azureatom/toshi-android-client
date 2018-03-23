@@ -18,11 +18,17 @@
 package com.toshi.view.custom
 
 import android.content.Context
+import android.graphics.PorterDuff
 import android.support.design.widget.AppBarLayout
 import android.util.AttributeSet
+import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import com.toshi.R
+import com.toshi.extensions.getColorById
+import kotlinx.android.synthetic.main.view_dapp_header.view.closeButton
+import kotlinx.android.synthetic.main.view_dapp_header.view.collapsingToolbar
 import kotlinx.android.synthetic.main.view_dapp_header.view.headerImage
 import kotlinx.android.synthetic.main.view_dapp_header.view.headerImageWrapper
+import kotlinx.android.synthetic.main.view_dapp_header.view.toolbar
 
 class DappHeaderView : AppBarLayout {
 
@@ -61,5 +67,28 @@ class DappHeaderView : AppBarLayout {
     private fun setHeaderImageAlpha(percentage: Float) {
         headerImageWrapper.alpha = percentage
         headerImage.alpha = percentage
+    }
+
+    fun enableCollapsing() {
+        setExpanded(true)
+        setDarkToolbar()
+    }
+
+    fun disableCollapsing() {
+        setExpanded(false)
+        setLightToolbar()
+        val lp = collapsingToolbar.layoutParams as AppBarLayout.LayoutParams
+        lp.height = WRAP_CONTENT
+    }
+
+    private fun setLightToolbar() {
+        collapsingToolbar.setBackgroundColor(getColorById(R.color.windowBackground))
+        toolbar.setBackgroundColor(getColorById(R.color.windowBackground))
+        toolbar.closeButton.setColorFilter(getColorById(R.color.textColorSecondary), PorterDuff.Mode.SRC_IN)
+    }
+
+    private fun setDarkToolbar() {
+        collapsingToolbar.setBackgroundColor(getColorById(R.color.colorPrimary))
+        toolbar.closeButton.setColorFilter(getColorById(R.color.textColorContrast), PorterDuff.Mode.SRC_IN)
     }
 }
